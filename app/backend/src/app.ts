@@ -1,5 +1,5 @@
 import express from 'express';
-import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
 import { UserRoutes, LoginRoutes } from './routes';
 
 class App {
@@ -21,6 +21,7 @@ class App {
 			res.header('Access-Control-Allow-Headers', '*');
 			next();
 		};
+		this.app.use(cors());
 		this.app.use(express.json());
 		this.app.use(accessControl);
 		this.app.use('/user', UserRoutes);

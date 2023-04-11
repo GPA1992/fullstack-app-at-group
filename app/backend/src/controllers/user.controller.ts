@@ -4,7 +4,7 @@ import * as bcrypt from 'bcryptjs';
 import http from '../utils/httpsStatus';
 import { User } from '../services';
 
-export default class Login {
+export default class UserController {
 	public static addNewUser = async (req: Request, res: Response) => {
 		try {
 			const { body } = req;
@@ -63,6 +63,20 @@ export default class Login {
 		}
 	};
 
+	public static findByemail = async (req: Request, res: Response) => {
+		try {
+			console.log('controler chamado');
+			
+			const { email } = req.params;
+			console.log(email);			
+			const user = await User.findByEmail(email);
+
+			return res.status(http.OK).json(user);
+		} catch (err: any) {
+			return res.status(500).json({message: 500, error: err.message});
+		}
+	};
+
 	public static listAllUsers = async (req: Request, res: Response) => {
 		try {
 			const allUsers = await User.findAll();
@@ -81,5 +95,7 @@ export default class Login {
 			return res.status(500).json({message: 500, error: err.message});
 		}
 	};
+
+	
 
 }

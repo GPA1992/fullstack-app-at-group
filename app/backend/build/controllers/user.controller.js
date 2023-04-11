@@ -30,11 +30,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = __importStar(require("bcryptjs"));
 const httpsStatus_1 = __importDefault(require("../utils/httpsStatus"));
 const services_1 = require("../services");
-class Login {
+class UserController {
 }
-exports.default = Login;
-_a = Login;
-Login.addNewUser = async (req, res) => {
+exports.default = UserController;
+_a = UserController;
+UserController.addNewUser = async (req, res) => {
     try {
         const { body } = req;
         const salt = bcrypt.genSaltSync(10);
@@ -51,7 +51,7 @@ Login.addNewUser = async (req, res) => {
         });
     }
 };
-Login.userUpdate = async (req, res) => {
+UserController.userUpdate = async (req, res) => {
     try {
         const { body } = req;
         const { nome } = req.params;
@@ -69,7 +69,7 @@ Login.userUpdate = async (req, res) => {
         });
     }
 };
-Login.selectUserByName = async (req, res) => {
+UserController.selectUserByName = async (req, res) => {
     try {
         const { nome } = req.params;
         const user = await services_1.User.findByName(nome);
@@ -79,7 +79,19 @@ Login.selectUserByName = async (req, res) => {
         return res.status(500).json({ message: 500, error: err.message });
     }
 };
-Login.listAllUsers = async (req, res) => {
+UserController.findByemail = async (req, res) => {
+    try {
+        console.log('controler chamado');
+        const { email } = req.params;
+        console.log(email);
+        const user = await services_1.User.findByEmail(email);
+        return res.status(httpsStatus_1.default.OK).json(user);
+    }
+    catch (err) {
+        return res.status(500).json({ message: 500, error: err.message });
+    }
+};
+UserController.listAllUsers = async (req, res) => {
     try {
         const allUsers = await services_1.User.findAll();
         return res.status(httpsStatus_1.default.OK).json(allUsers);
@@ -88,7 +100,7 @@ Login.listAllUsers = async (req, res) => {
         return res.status(500).json({ message: 500, error: err.message });
     }
 };
-Login.deleteUser = async (req, res) => {
+UserController.deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
         await services_1.User.deleteById(Number(id));
