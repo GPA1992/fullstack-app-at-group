@@ -59,7 +59,7 @@ Login.userUpdate = async (req, res) => {
         const hash = bcrypt.hashSync(body.senha, salt);
         const newUser = Object.assign(Object.assign({}, body), { senha: hash });
         await services_1.User.update(nome, newUser);
-        const response = { message: `User ${newUser.nome} atualizado com sucesso` };
+        const response = { message: 'Usuario atualizado com sucesso' };
         return res.status(httpsStatus_1.default.CREATED).json(response);
     }
     catch (err) {
@@ -83,6 +83,16 @@ Login.listAllUsers = async (req, res) => {
     try {
         const allUsers = await services_1.User.findAll();
         return res.status(httpsStatus_1.default.OK).json(allUsers);
+    }
+    catch (err) {
+        return res.status(500).json({ message: 500, error: err.message });
+    }
+};
+Login.deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await services_1.User.deleteById(Number(id));
+        return res.status(httpsStatus_1.default.OK).json({ message: `Usuario do ${id} desativado com sucesso` });
     }
     catch (err) {
         return res.status(500).json({ message: 500, error: err.message });

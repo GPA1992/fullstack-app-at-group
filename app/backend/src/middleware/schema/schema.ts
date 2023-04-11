@@ -31,4 +31,17 @@ const userSchema = Joi.object({
 	}),
 });
 
-export default userSchema;
+const loginSchema = Joi.object({
+	email: Joi.string().email().required().messages({
+		'string.base': 'O campo email deve ser uma string',
+		'string.email': 'O campo email deve ser um email válido ex: nome@email.com',
+		'any.required': 'O campo email é obrigatório',
+	}),
+	senha: Joi.string().min(6).required().messages({
+		'string.base': 'O campo senha deve ser uma string',
+		'string.min': 'O campo senha deve ter pelo menos {#limit} caracteres',
+		'any.required': 'O campo senha é obrigatório',
+	}),
+});
+
+export { userSchema, loginSchema };

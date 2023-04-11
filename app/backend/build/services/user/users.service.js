@@ -30,6 +30,15 @@ User.findByName = async (nome) => {
         return err;
     }
 };
+User.findByEmail = async (email) => {
+    try {
+        const user = await user_model_1.default.findOne({ where: { email } });
+        return user;
+    }
+    catch (err) {
+        return err;
+    }
+};
 User.create = async (user) => {
     try {
         const create = await user_model_1.default.create({
@@ -53,11 +62,25 @@ User.update = async (nome, user) => {
             email: user.email,
             senha: user.senha,
             avatar: user.avatar,
-            dataDeNascimento: user.dataDeNascimento
+            dataDeNascimento: user.dataDeNascimento,
+            ativo: user.ativo
         }, { where: {
                 nome
             } });
         return update;
+    }
+    catch (err) {
+        return err;
+    }
+};
+User.deleteById = async (id) => {
+    try {
+        const deactivate = await user_model_1.default.update({
+            ativo: false
+        }, { where: {
+                id
+            } });
+        return deactivate;
     }
     catch (err) {
         return err;

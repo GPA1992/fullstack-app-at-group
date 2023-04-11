@@ -24,6 +24,15 @@ export default class User {
 		}
 	};
 
+	public static findByEmail = async (email: string): Promise<UserType | null> => {
+		try {
+			const user = await userModel.findOne({where: { email }});
+			return user;
+		} catch (err: any) {
+			return err;
+		}
+	};
+
 	public static create = async (user: UserType): Promise<UserType | null> => {
 		try {			
 			const create: UserType | null = await userModel.create({

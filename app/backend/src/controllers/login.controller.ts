@@ -12,10 +12,11 @@ const secret = process.env.JWT_SECRET || 'jwt_secret';
 export default class Login {
 	public static login = async (req: Request, res: Response) => {
 		try {
-			const { name } = req.body;
-			const user = await User.findByName(name);
+			const { email } = req.body;
+			const user = await User.findByName(email);
 			const token = jwt.sign({ ...user }, secret, jwtConfig);
-			return res.status(200).json({ message: `User ${name} logged in` });
+			return res.status(200).json(token)
+			;
 		} catch (err: any) {
 			return res.status(500).json({
 				message: 500,

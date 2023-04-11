@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
-import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
 import http from '../utils/httpsStatus';
 import { User } from '../services';
