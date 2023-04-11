@@ -1,0 +1,23 @@
+{
+  "name": "fullstack-app-at-group",
+  "version": "1.0.0",
+  "description": "app fullsstack para teste",
+  "main": "index.js",
+  "scripts": {
+    "commit": "git-cz",
+    "install:all": "bash install.sh",
+    "logs": "cd app && docker-compose logs -f"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.3.0",
+    "git-conventional-commits": "^2.5.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
