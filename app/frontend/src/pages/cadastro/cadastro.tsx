@@ -25,8 +25,6 @@ export default function Cadastro(): JSX.Element {
 		};
 		console.log(dataDeNascimento);		
 		await createUser(userData);
-		console.log(userData);
-		// aqui você pode enviar os dados do usuário para um servidor ou armazená-los localmente
 	};
 
 	return (
