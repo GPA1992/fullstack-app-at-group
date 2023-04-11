@@ -22,9 +22,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = __importStar(require("bcryptjs"));
+const httpsStatus_1 = __importDefault(require("../utils/httpsStatus"));
 const services_1 = require("../services");
 class Login {
 }
@@ -34,21 +38,63 @@ Login.addNewUser = async (req, res) => {
     try {
         const { body } = req;
         const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(body.password, salt);
-        const newUser = {
-            name: body.name,
-            role: body.role,
-            password: hash,
-        };
-        await services_1.UserService.addNewUser(newUser);
-        return res
-            .status(201)
-            .json({ message: `User ${body.name} successfully created` });
+        const hash = bcrypt.hashSync(body.senha, salt);
+        const newUser = Object.assign(Object.assign({}, body), { senha: hash });
+        await services_1.User.create(newUser);
+        const response = { message: `User ${newUser.nome} criado com sucesso` };
+        return res.status(httpsStatus_1.default.CREATED).json(response);
     }
     catch (err) {
         return res.status(500).json({
             message: 500,
             error: err.message,
         });
+    }
+};
+Login.userUpdate = async (req, res) => {
+    try {
+        const { body } = req;
+        const { nome } = req.params;
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(body.senha, salt);
+        const newUser = Object.assign(Object.assign({}, body), { senha: hash });
+        await services_1.User.update(nome, newUser);
+        const response = { message: 'Usuario atualizado com sucesso' };
+        return res.status(httpsStatus_1.default.CREATED).json(response);
+    }
+    catch (err) {
+        return res.status(500).json({
+            message: 500,
+            error: err.message,
+        });
+    }
+};
+Login.selectUserByName = async (req, res) => {
+    try {
+        const { nome } = req.params;
+        const user = await services_1.User.findByName(nome);
+        return res.status(httpsStatus_1.default.OK).json(user);
+    }
+    catch (err) {
+        return res.status(500).json({ message: 500, error: err.message });
+    }
+};
+Login.listAllUsers = async (req, res) => {
+    try {
+        const allUsers = await services_1.User.findAll();
+        return res.status(httpsStatus_1.default.OK).json(allUsers);
+    }
+    catch (err) {
+        return res.status(500).json({ message: 500, error: err.message });
+    }
+};
+Login.deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await services_1.User.deleteById(Number(id));
+        return res.status(httpsStatus_1.default.OK).json({ message: `Usuario do ${id} desativado com sucesso` });
+    }
+    catch (err) {
+        return res.status(500).json({ message: 500, error: err.message });
     }
 };

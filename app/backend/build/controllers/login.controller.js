@@ -37,13 +37,10 @@ exports.default = Login;
 _a = Login;
 Login.login = async (req, res) => {
     try {
-        const { name } = req.body;
-        const user = await services_1.UserService.findByName(name);
+        const { email } = req.body;
+        const user = await services_1.User.findByName(email);
         const token = jwt.sign(Object.assign({}, user), secret, jwtConfig);
-        if (user.role === 'admin') {
-            return res.status(200).json({ token });
-        }
-        return res.status(200).json({ message: `User ${name} logged in` });
+        return res.status(200).json(token);
     }
     catch (err) {
         return res.status(500).json({

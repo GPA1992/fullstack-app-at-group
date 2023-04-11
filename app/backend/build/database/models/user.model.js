@@ -9,28 +9,40 @@ class User extends sequelize_1.Model {
 }
 User.init({
     id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
         type: sequelize_1.DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
     },
-    name: {
+    nome: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
-    password: {
+    email: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
-    role: {
+    senha: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
-    }
+    },
+    avatar: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+    },
+    dataDeNascimento: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false,
+    },
+    ativo: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
 }, {
     underscored: true,
     sequelize: index_1.default,
     timestamps: false,
-    modelName: 'User',
     tableName: 'Users',
 });
 exports.default = User;

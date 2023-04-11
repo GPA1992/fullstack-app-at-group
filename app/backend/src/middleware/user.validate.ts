@@ -1,88 +1,128 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from 'express';
-import * as bcrypt from 'bcryptjs';
-import { UserService } from '../services';
-import * as jwt from 'jsonwebtoken';
+/* import * as bcrypt from 'bcryptjs'; */
+import { User } from '../services';
+/* import * as jwt from 'jsonwebtoken'; */
+import{ userSchema, loginSchema } from './schema/schema';
+import https from '../utils/httpsStatus';
+import { UserType } from '../types/types';
 
-const jwtConfig: jwt.SignOptions = {
-    expiresIn: '7d',
-    algorithm: 'HS256',
-};
+/* const jwtConfig: jwt.SignOptions = {
+	expiresIn: '7d',
+	algorithm: 'HS256',
+}; */
 
-const secret = process.env.JWT_SECRET || 'jwt_secret';
+/* const secret = process.env.JWT_SECRET || 'jwt_secret'; */
 
-const incorrectMsg = 'Incorrect email or password';
+/* const incorrectMsg = 'Incorrect email or password'; */
 
-class UserValidate {
-    public static createUserfieldHandle = async (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => {
-        try {
-            const { name, password, role } = req.body;
-            const fieldsRequire = name && password && role;
+class Validate {
+	public static createUserfieldValidate = async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			await userSchema.validateAsync(req.body);   
+		
+			return next();
+		} catch (err: any) {
+			return res.status(https.UNPROCESSABLE_ENTITY).json({ message: err.message });
+		}
+	};
 
-            if (!fieldsRequire) {
-                return res
-                    .status(400)
-                    .json({ message: 'All fields must be filled' });
-            }
-            const findUser = await UserService.findByName(name);
-            if (findUser !== null) {
-                return res.status(409).json({ message: 'UserAlreadyExist' });
-            }
+	public static checkIfUserExists = async  (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const { nome } = req.params;
+			const checkIfUserExists: UserType | object[] = await User.findByName(nome as string);
 
-            return next();
-        } catch (err: any) {
-            return res.status(400).json({ message: err.message });
-        }
-    };
+			if (Array.isArray(checkIfUserExists) && checkIfUserExists.length === 0) {
+				return res.status(https.NOT_FOUND).json({ message: 'Usuario não existe' });
+			}
+			return next();
+		} catch (err: any) {
+			return res.status(https.UNPROCESSABLE_ENTITY).json({ message: err.message });
+		}
+	};
 
-    public static loginFieldHandle = async (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => {
-        try {
-            const { name, password } = req.body;
-            const fieldsRequire = name && password;
+	public static checkIfEmailExists = async  (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const { email } = req.body;
+			const checkIfUserExists: UserType | null= await User.findByEmail(email as string);
 
-            if (!fieldsRequire) {
-                return res
-                    .status(400)
-                    .json({ message: 'All fields must be filled' });
-            }
-            return next();
-        } catch (err: any) {
-            return res.status(400).json({ message: err.message });
-        }
-    };
+			if (!checkIfUserExists) {
+				return res.status(https.NOT_FOUND).json({ message: 'Email não cadastrado' });
+			}
+			return next();
+		} catch (err: any) {
+			return res.status(https.UNPROCESSABLE_ENTITY).json({ message: err.message });
+		}
+	};
 
-    public static fieldValidate = async (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => {
-        try {
-            const { name, password } = req.body;
-            const userData = await UserService.findByName(name);
-            if (!userData) {
-                return res.status(401).json({ message: incorrectMsg });
-            }
+	public static checkIfEmailAlreadyExists = async  (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const { email } = req.body;
+			const checkIfUserExists: UserType | null= await User.findByEmail(email as string);
 
-            const checkPassword = bcrypt.compareSync(
-                password,
-                userData.password
-            );
+			if (checkIfUserExists) {
+				return res.status(https.CONFLICT).json({ message: 'Email ja esta em uso' });
+			}
+			return next();
+		} catch (err: any) {
+			return res.status(https.UNPROCESSABLE_ENTITY).json({ message: err.message });
+		}
+	};
+	
+	public static checkIfUserAlreadyExists = async  (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const { nome } = req.body;
+			const checkIfUserAlreadyExists: UserType | object[] = await User.findByName(nome as string);
+			console.log(checkIfUserAlreadyExists);
+			
+			
+			if (Array.isArray(checkIfUserAlreadyExists) && checkIfUserAlreadyExists.length > 0) {
+				return res.status(https.CONFLICT).json({ message: 'Usuario ja existe' });
+			}
+			return next();
+		} catch (err: any) {
+			return res.status(https.UNPROCESSABLE_ENTITY).json({ message: err.message });
+		}
+	};
+	
+	public static loginFieldHandle = async (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => {
+		try {		
+			await loginSchema.validateAsync(req.body); 
+			return next();
+		} catch (err: any) {
+			return res.status(400).json({ message: err.message });
+		}
+	};
 
-            if (checkPassword === false) {
-                return res.status(401).json({ message: incorrectMsg });
-            }
+/* 	public static fieldValidate = async (
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) => {
+		try {
+			const { name, password } = req.body;
+			const userData = await User.findByName(name);
+			if (!userData) {
+				return res.status(401).json({ message: incorrectMsg });
+			}
 
-            return next();
-        } catch (err: any) {
-            return res.status(400).json({ message: err.message });
-        }
-    };
+			const checkPassword = bcrypt.compareSync(
+				password,
+				userData.senha
+			);
+
+			if (checkPassword === false) {
+				return res.status(401).json({ message: incorrectMsg });
+			}
+
+			return next();
+		} catch (err: any) {
+			return res.status(400).json({ message: err.message });
+		}
+	}; */
 }
-export default UserValidate;
+export default Validate;

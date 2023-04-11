@@ -1,9 +1,13 @@
 
 interface UserType {
-    id?: number;
-    name: string;
-    role: string;
-    password: string;
+    id: number;
+    nome: string;
+    email: string;
+    senha: string;
+    avatar: string;
+    dataDeNascimento: Date;
+    ativo?: boolean;
 }
 
-export { UserType };
+
+export { UserType, UserTypeUpdate};
