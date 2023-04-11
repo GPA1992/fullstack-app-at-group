@@ -1,4 +1,4 @@
-import { UserType } from '../../types/types';
+import { UserType, UserTypeUpdate } from '../../types/types';
 import userModel from '../../database/models/user.model';
 import selectOneUser from '../../database/models/userRawQuerie.model';
 
@@ -6,7 +6,9 @@ export default class User {
 
 	public static findAll= async (): Promise<UserType[] | null> => {
 		try {
-			const user = await userModel.findAll();		
+			const user = await userModel.findAll({
+				attributes: { exclude: ['senha'] }
+			});		
 			return user;
 		} catch (err: any) {
 			return err;
@@ -34,6 +36,23 @@ export default class User {
 			console.log(`func create: ${create} `);
 			
 			return create;
+		} catch (err: any) {
+			return err;
+		}
+	};
+
+	public static update = async (nome: string, user: UserTypeUpdate)/* : Promise<UserType | null> */ => {
+		try {			
+			const update = await userModel.update({
+				nome: user.nome,
+				email: user.email,
+				senha: user.senha,
+				avatar: user.avatar,
+				dataDeNascimento: user.dataDeNascimento
+			}, { where: {
+				nome
+			}});			
+			return update;
 		} catch (err: any) {
 			return err;
 		}

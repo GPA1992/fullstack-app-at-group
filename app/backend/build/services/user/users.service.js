@@ -12,7 +12,9 @@ exports.default = User;
 _a = User;
 User.findAll = async () => {
     try {
-        const user = await user_model_1.default.findAll();
+        const user = await user_model_1.default.findAll({
+            attributes: { exclude: ['senha'] }
+        });
         return user;
     }
     catch (err) {
@@ -39,6 +41,23 @@ User.create = async (user) => {
         });
         console.log(`func create: ${create} `);
         return create;
+    }
+    catch (err) {
+        return err;
+    }
+};
+User.update = async (nome, user) => {
+    try {
+        const update = await user_model_1.default.update({
+            nome: user.nome,
+            email: user.email,
+            senha: user.senha,
+            avatar: user.avatar,
+            dataDeNascimento: user.dataDeNascimento
+        }, { where: {
+                nome
+            } });
+        return update;
     }
     catch (err) {
         return err;

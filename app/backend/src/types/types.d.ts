@@ -9,4 +9,13 @@ interface UserType {
     ativo: boolean;
 }
 
-export { UserType };
+interface UserTypeUpdate {
+    nome?: string;
+    email?: string;
+    senha?: string;
+    avatar?: string;
+    dataDeNascimento?: Date;
+    ativo?: boolean;
+}
+
+export { UserType, UserTypeUpdate};

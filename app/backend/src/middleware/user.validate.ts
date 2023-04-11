@@ -14,7 +14,7 @@ import { UserType } from '../types/types';
 
 /* const secret = process.env.JWT_SECRET || 'jwt_secret'; */
 
-const incorrectMsg = 'Incorrect email or password';
+/* const incorrectMsg = 'Incorrect email or password'; */
 
 class Validate {
 	public static createUserfieldValidate = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,6 +27,22 @@ class Validate {
 		}
 	};
 
+	public static checkIfUserExists = async  (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const { nome } = req.params;
+			const checkIfUserExists: UserType | object[] = await User.findByName(nome as string);
+			console.log(checkIfUserExists);
+			
+
+			if (Array.isArray(checkIfUserExists) && checkIfUserExists.length === 0) {
+				return res.status(https.NOT_FOUND).json({ message: 'Usuario não existe' });
+			}
+			return next();
+		} catch (err: any) {
+			return res.status(https.UNPROCESSABLE_ENTITY).json({ message: err.message });
+		}
+	};
+	
 	public static createUserValidate = async  (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const { nome } = req.body;
@@ -34,11 +50,11 @@ class Validate {
 			
 			
 			if (Array.isArray(checkIfUserAlreadyExists) && checkIfUserAlreadyExists.length > 0) {
-				return res.status(https.CONFLICT).json({ messageaaaa: 'User already exists' });
+				return res.status(https.CONFLICT).json({ message: 'Usuario ja existe' });
 			}
 			return next();
 		} catch (err: any) {
-			return res.status(https.UNPROCESSABLE_ENTITY).json({ messageaaaa: err.message });
+			return res.status(https.UNPROCESSABLE_ENTITY).json({ message: err.message });
 		}
 	};
 	
