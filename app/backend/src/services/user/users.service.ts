@@ -26,7 +26,10 @@ export default class User {
 
 	public static findByEmail = async (email: string): Promise<UserType | null> => {
 		try {
+			console.log(email);			
 			const user = await userModel.findOne({where: { email }});
+			console.log(user);
+			
 			return user;
 		} catch (err: any) {
 			return err;

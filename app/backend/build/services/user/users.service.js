@@ -48,7 +48,6 @@ User.create = async (user) => {
             avatar: user.avatar,
             dataDeNascimento: user.dataDeNascimento
         });
-        console.log(`func create: ${create} `);
         return create;
     }
     catch (err) {
