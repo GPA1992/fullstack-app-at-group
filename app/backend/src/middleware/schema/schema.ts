@@ -26,7 +26,9 @@ const userSchema = Joi.object({
 			'string.pattern.base': 'O campo dataDeNascimento deve estar no formato DD/MM/AAAA',
 			'any.required': 'O campo dataDeNascimento é obrigatório',
 		}),
-
+	ativo: Joi.boolean().messages({
+		'boolean.base': 'O campo ativo deve ser um booleano',
+	}),
 });
 
 export default userSchema;

@@ -73,4 +73,14 @@ export default class Login {
 		}
 	};
 
+	public static deleteUser = async (req: Request, res: Response) => {
+		try {
+			const { id } = req.params;
+			await User.deleteById(Number(id));
+			return res.status(http.OK).json( {message: `Usuario do ${id} desativado com sucesso`});
+		} catch (err: any) {
+			return res.status(500).json({message: 500, error: err.message});
+		}
+	};
+
 }

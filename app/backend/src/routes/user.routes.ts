@@ -11,8 +11,14 @@ router.post(
 	UserValidate.createUserValidate,
 	UserController.addNewUser
 );
-router.put('/:nome',UserValidate.createUserfieldValidate, UserValidate.checkIfUserExists, UserController.userUpdate);
+
+router.put('/:nome',
+	UserValidate.createUserfieldValidate,
+	UserValidate.checkIfUserExists,
+	UserController.userUpdate);
+
 router.get('/:nome', UserController.selectUserByName);
 router.get('/', UserController.listAllUsers);
+router.delete('/:id', UserController.deleteUser);
 
 export default router;

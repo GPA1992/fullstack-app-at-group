@@ -48,11 +48,27 @@ export default class User {
 				email: user.email,
 				senha: user.senha,
 				avatar: user.avatar,
-				dataDeNascimento: user.dataDeNascimento
+				dataDeNascimento: user.dataDeNascimento,
+				ativo: user.ativo
 			}, { where: {
 				nome
 			}});			
 			return update;
+		} catch (err: any) {
+			return err;
+		}
+	};
+
+	public static deleteById = async (id: number) => {
+		try {
+			const deactivate = await userModel.update({
+				ativo: false
+			}, 
+			{ where: {
+				id
+			}}); 
+			return deactivate;
+
 		} catch (err: any) {
 			return err;
 		}
