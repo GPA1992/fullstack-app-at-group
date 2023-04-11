@@ -17,7 +17,7 @@ O projeto Fullstack App at Group é uma aplicação fullstack responsável por g
 
 ## Dependencias
 
-Para instalar todas as dependencias (app/backend e app/frontend), dentro da pasta `/app`, rode o comando:
+Para instalar todas as dependencias (app/backend e app/frontend), dentro da pasta raiz, rode o comando:
 
 - `npm run install:all`
 
