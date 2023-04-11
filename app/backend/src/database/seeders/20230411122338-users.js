@@ -9,7 +9,7 @@ module.exports = {
               email: 'root@email.com',
               senha: '$2a$10$9BRN8/RqRxV5.B2T9P3npOZruw1ZPbJ/5e99D4JXLt.Sp4SH/m1EG', //'adm_password'
               avatar: 'https://avatars.dicebear.com/api/croodles/happy.jpg',
-              dataDeNascimento: new Date('10/04/1992'),
+              data_de_nascimento: new Date('10/04/1992'),
               ativo: true
           },
       ], {}),

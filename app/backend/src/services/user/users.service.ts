@@ -1,7 +1,7 @@
 import { UserType } from '../../types/types';
 import userModel from '../../database/models/user.model';
 
-export default class UserService {
+export default class User {
     public static findByName = async (
         name: string
     ): Promise<UserType | null> => {
@@ -11,16 +11,10 @@ export default class UserService {
         return findOne;
     };
 
-    public static addNewUser = async ({
-        name,
-        password,
-        role,
-    }: UserType): Promise<UserType | null> => {
-        const findOne: UserType | null = await userModel.create({
-            name,
-            password,
-            role,
-        });
-        return findOne;
+    public static create = async (user): Promise<UserType | null> => {
+        console.log(user);
+        
+        const create = await userModel.create(user);
+        return create;
     };
 }

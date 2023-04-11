@@ -3,30 +3,46 @@ import db from './index';
 
 class User extends Model {
     public id!: number;
-    public name!: string;
-    public password!: string;
-    public role!: string;
+    public nome!: string;
+    public email!: string;
+    public senha!: string;
+    public avatar!: string;
+    public dataDeNascimento!: Date;
+    public ativo!: boolean;
 }
 
 User.init({
     id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
         type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
     },
-    name: {
+    nome: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    password: {
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+  },
+    senha: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    role: {
+    avatar: {
         type: DataTypes.STRING,
         allowNull: false,
-    }
+    },
+    dataDeNascimento: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    ativo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+    },
 }, {
     underscored: true,
     sequelize: db,

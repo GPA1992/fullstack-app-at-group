@@ -22,39 +22,42 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = __importStar(require("bcryptjs"));
 const services_1 = require("../services");
+const joi_1 = __importDefault(require("joi"));
+const error_1 = __importDefault(require("../utils/error"));
 const jwtConfig = {
     expiresIn: '7d',
     algorithm: 'HS256',
 };
 const secret = process.env.JWT_SECRET || 'jwt_secret';
 const incorrectMsg = 'Incorrect email or password';
-class UserValidate {
+class Validate {
 }
-_a = UserValidate;
-UserValidate.createUserfieldHandle = async (req, res, next) => {
+_a = Validate;
+Validate.createUserfieldValidate = async (req, res, next) => {
     try {
-        const { name, password, role } = req.body;
-        const fieldsRequire = name && password && role;
-        if (!fieldsRequire) {
-            return res
-                .status(400)
-                .json({ message: 'All fields must be filled' });
-        }
-        const findUser = await services_1.UserService.findByName(name);
-        if (findUser !== null) {
-            return res.status(409).json({ message: 'UserAlreadyExist' });
-        }
+        console.log("FUI CHAMADO");
+        const schema = joi_1.default.object({
+            nome: joi_1.default.string().min(4).required(),
+            email: joi_1.default.string().email().required(),
+            senha: joi_1.default.string().min(5).required(),
+            avatar: joi_1.default.string().required(),
+            dataDeNascimento: joi_1.default.date().required(),
+        });
+        await schema.validateAsync(req.body);
         return next();
     }
     catch (err) {
-        return res.status(400).json({ message: err.message });
+        return res.status(error_1.default.UNPROCESSABLE_ENTITY).json({ messageaaaa: err.message });
     }
 };
-UserValidate.loginFieldHandle = async (req, res, next) => {
+Validate.loginFieldHandle = async (req, res, next) => {
     try {
         const { name, password } = req.body;
         const fieldsRequire = name && password;
@@ -69,14 +72,14 @@ UserValidate.loginFieldHandle = async (req, res, next) => {
         return res.status(400).json({ message: err.message });
     }
 };
-UserValidate.fieldValidate = async (req, res, next) => {
+Validate.fieldValidate = async (req, res, next) => {
     try {
         const { name, password } = req.body;
-        const userData = await services_1.UserService.findByName(name);
+        const userData = await services_1.User.findByName(name);
         if (!userData) {
             return res.status(401).json({ message: incorrectMsg });
         }
-        const checkPassword = bcrypt.compareSync(password, userData.password);
+        const checkPassword = bcrypt.compareSync(password, userData.senha);
         if (checkPassword === false) {
             return res.status(401).json({ message: incorrectMsg });
         }
@@ -86,4 +89,4 @@ UserValidate.fieldValidate = async (req, res, next) => {
         return res.status(400).json({ message: err.message });
     }
 };
-exports.default = UserValidate;
+exports.default = Validate;

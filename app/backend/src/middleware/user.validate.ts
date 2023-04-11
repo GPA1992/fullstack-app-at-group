@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import * as bcrypt from 'bcryptjs';
-import { UserService } from '../services';
+import { User } from '../services';
 import * as jwt from 'jsonwebtoken';
-import Joi from 'joi';
+import userSchema from './schema/schema'
+import error from '../utils/error'
 
 const jwtConfig: jwt.SignOptions = {
     expiresIn: '7d',
@@ -14,29 +15,12 @@ const secret = process.env.JWT_SECRET || 'jwt_secret';
 const incorrectMsg = 'Incorrect email or password';
 
 class Validate {
-    public static createUserfieldValidate = async (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => {
+    public static createUserfieldValidate = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log("FUI CHAMADO");
-            
-            const schema = Joi.object({
-              nome: Joi.string().min(4).required(),
-              email: Joi.string().email().required(),
-              senha: Joi.string().min(5).required(),
-              avatar: Joi.string().required(),
-              birthDate: Joi.date().required(),
-            });
-      
-            const validate = await schema.validateAsync(req.body);
-            console.log(validate);         
-      
-
+            await userSchema.validateAsync(req.body);   
             return next();
           } catch (err: any) {
-            return res.status(400).json({ message: err.message });
+            return res.status(error.UNPROCESSABLE_ENTITY).json({ messageaaaa: err.message });
           }
     };
 
@@ -67,14 +51,14 @@ class Validate {
     ) => {
         try {
             const { name, password } = req.body;
-            const userData = await UserService.findByName(name);
+            const userData = await User.findByName(name);
             if (!userData) {
                 return res.status(401).json({ message: incorrectMsg });
             }
 
             const checkPassword = bcrypt.compareSync(
                 password,
-                userData.password
+                userData.senha
             );
 
             if (checkPassword === false) {

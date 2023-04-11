@@ -34,16 +34,12 @@ Login.addNewUser = async (req, res) => {
     try {
         const { body } = req;
         const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(body.password, salt);
-        const newUser = {
-            name: body.name,
-            role: body.role,
-            password: hash,
-        };
-        await services_1.UserService.addNewUser(newUser);
+        const hash = bcrypt.hashSync(body.senha, salt);
+        const newUser = Object.assign(Object.assign({}, body), { senha: hash });
+        await services_1.User.create(newUser);
         return res
             .status(201)
-            .json({ message: `User ${body.name} successfully created` });
+            .json({ message: `User ${newUser.nome} criado com sucesso` });
     }
     catch (err) {
         return res.status(500).json({

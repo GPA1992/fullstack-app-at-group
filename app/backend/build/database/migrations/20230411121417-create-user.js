@@ -25,13 +25,14 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
-            dataDeNascimento: {
+            data_de_nascimento: {
                 type: Sequelize.DATE,
                 allowNull: false,
             },
             ativo: {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
+                defaultValue: true,
             },
         });
     },

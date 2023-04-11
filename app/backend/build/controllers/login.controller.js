@@ -38,11 +38,8 @@ _a = Login;
 Login.login = async (req, res) => {
     try {
         const { name } = req.body;
-        const user = await services_1.UserService.findByName(name);
+        const user = await services_1.User.findByName(name);
         const token = jwt.sign(Object.assign({}, user), secret, jwtConfig);
-        if (user.role === 'admin') {
-            return res.status(200).json({ token });
-        }
         return res.status(200).json({ message: `User ${name} logged in` });
     }
     catch (err) {

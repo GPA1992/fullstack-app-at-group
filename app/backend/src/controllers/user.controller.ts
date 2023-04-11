@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
-import { UserService } from '../services';
+import { User } from '../services';
 
 export default class Login {
     public static addNewUser = async (req: Request, res: Response) => {
@@ -10,19 +10,19 @@ export default class Login {
 
             const salt = bcrypt.genSaltSync(10);
 
-            const hash = bcrypt.hashSync(body.password, salt);
+                        const hash = bcrypt.hashSync(body.senha, salt);
 
             const newUser = {
-                name: body.name,
-                role: body.role,
-                password: hash,
+                ...body,
+                senha: hash
             };
-
-            await UserService.addNewUser(newUser);
+            
+            await User.create(newUser);
 
             return res
                 .status(201)
-                .json({ message: `User ${body.name} successfully created` });
+                .json({ message: `User ${newUser.nome} criado com sucesso` });
+
         } catch (err: any) {
             return res.status(500).json({
                 message: 500,
