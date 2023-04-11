@@ -7,20 +7,6 @@ O projeto Fullstack App at Group é uma aplicação fullstack responsável por g
 
 
  
-<br>
-
-> ### localhost+`PORTA`+/documentation/.
-
- <br>
-
-Por padrão o projeto está rodando na porta 3001.
-
-
-> ### http://localhost:3001/documentation/
-
-<br>
-
-> Antes é preciso instalar a aplicação.
 
 <br>
 
