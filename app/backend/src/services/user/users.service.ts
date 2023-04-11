@@ -41,9 +41,7 @@ export default class User {
 				senha: user.senha,
 				avatar: user.avatar,
 				dataDeNascimento: user.dataDeNascimento
-			});
-			console.log(`func create: ${create} `);
-			
+			});			
 			return create;
 		} catch (err: any) {
 			return err;

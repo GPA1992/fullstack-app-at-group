@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /* import * as bcrypt from 'bcryptjs'; */
 const services_1 = require("../services");
 /* import * as jwt from 'jsonwebtoken'; */
-const schema_1 = __importDefault(require("./schema/schema"));
+const schema_1 = require("./schema/schema");
 const httpsStatus_1 = __importDefault(require("../utils/httpsStatus"));
 /* const jwtConfig: jwt.SignOptions = {
     expiresIn: '7d',
@@ -20,7 +20,7 @@ class Validate {
 _a = Validate;
 Validate.createUserfieldValidate = async (req, res, next) => {
     try {
-        await schema_1.default.validateAsync(req.body);
+        await schema_1.userSchema.validateAsync(req.body);
         return next();
     }
     catch (err) {
@@ -33,6 +33,19 @@ Validate.checkIfUserExists = async (req, res, next) => {
         const checkIfUserExists = await services_1.User.findByName(nome);
         if (Array.isArray(checkIfUserExists) && checkIfUserExists.length === 0) {
             return res.status(httpsStatus_1.default.NOT_FOUND).json({ message: 'Usuario não existe' });
+        }
+        return next();
+    }
+    catch (err) {
+        return res.status(httpsStatus_1.default.UNPROCESSABLE_ENTITY).json({ message: err.message });
+    }
+};
+Validate.checkIfEmailExists = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        const checkIfUserExists = await services_1.User.findByEmail(email);
+        if (!checkIfUserExists) {
+            return res.status(httpsStatus_1.default.NOT_FOUND).json({ message: 'Email não cadastrado' });
         }
         return next();
     }
@@ -69,13 +82,7 @@ Validate.checkIfUserAlreadyExists = async (req, res, next) => {
 };
 Validate.loginFieldHandle = async (req, res, next) => {
     try {
-        const { name, password } = req.body;
-        const fieldsRequire = name && password;
-        if (!fieldsRequire) {
-            return res
-                .status(400)
-                .json({ message: 'All fields must be filled' });
-        }
+        await schema_1.loginSchema.validateAsync(req.body);
         return next();
     }
     catch (err) {

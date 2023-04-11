@@ -1,3 +1,3 @@
-import User from './user/users.service'
+import User from './user/users.service';
 
 export { User };
