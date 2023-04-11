@@ -7,8 +7,7 @@ const router = express.Router();
 
 router.post(
     '/',
-    AuthMiddleware.tokenHandle,
-    UserValidate.createUserfieldHandle,
+    UserValidate.createUserfieldValidate,
     UserController.addNewUser
 );
 

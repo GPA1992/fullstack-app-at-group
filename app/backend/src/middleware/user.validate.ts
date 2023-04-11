@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import * as bcrypt from 'bcryptjs';
 import { UserService } from '../services';
 import * as jwt from 'jsonwebtoken';
+import Joi from 'joi';
 
 const jwtConfig: jwt.SignOptions = {
     expiresIn: '7d',
@@ -12,30 +13,31 @@ const secret = process.env.JWT_SECRET || 'jwt_secret';
 
 const incorrectMsg = 'Incorrect email or password';
 
-class UserValidate {
-    public static createUserfieldHandle = async (
+class Validate {
+    public static createUserfieldValidate = async (
         req: Request,
         res: Response,
         next: NextFunction
     ) => {
         try {
-            const { name, password, role } = req.body;
-            const fieldsRequire = name && password && role;
-
-            if (!fieldsRequire) {
-                return res
-                    .status(400)
-                    .json({ message: 'All fields must be filled' });
-            }
-            const findUser = await UserService.findByName(name);
-            if (findUser !== null) {
-                return res.status(409).json({ message: 'UserAlreadyExist' });
-            }
+            console.log("FUI CHAMADO");
+            
+            const schema = Joi.object({
+              nome: Joi.string().min(4).required(),
+              email: Joi.string().email().required(),
+              senha: Joi.string().min(5).required(),
+              avatar: Joi.string().required(),
+              birthDate: Joi.date().required(),
+            });
+      
+            const validate = await schema.validateAsync(req.body);
+            console.log(validate);         
+      
 
             return next();
-        } catch (err: any) {
+          } catch (err: any) {
             return res.status(400).json({ message: err.message });
-        }
+          }
     };
 
     public static loginFieldHandle = async (
@@ -85,4 +87,4 @@ class UserValidate {
         }
     };
 }
-export default UserValidate;
+export default Validate;
