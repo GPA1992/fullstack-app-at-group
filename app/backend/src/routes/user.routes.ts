@@ -5,13 +5,15 @@ import UserValidate from '../middleware/user.validate';
 
 const router = express.Router();
 
-router.get(	'/:nome', UserController.selectUser );
 router.post(
 	'/',
 	UserValidate.createUserfieldValidate,
 	UserValidate.createUserValidate,
 	UserController.addNewUser
 );
+router.get(	'/:nome', UserController.selectUserByName);
+router.get('/', UserController.listAllUsers);
+
 
 
 

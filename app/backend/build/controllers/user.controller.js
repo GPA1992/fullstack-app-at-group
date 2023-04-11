@@ -47,16 +47,22 @@ Login.addNewUser = async (req, res) => {
         });
     }
 };
-Login.selectUser = async (req, res) => {
+Login.selectUserByName = async (req, res) => {
     try {
         const { nome } = req.params;
         const user = await services_1.User.findByName(nome);
         return res.status(201).json(user);
     }
     catch (err) {
-        return res.status(500).json({
-            message: 500,
-            error: err.message,
-        });
+        return res.status(500).json({ message: 500, error: err.message });
+    }
+};
+Login.listAllUsers = async (req, res) => {
+    try {
+        const allUsers = await services_1.User.findAll();
+        return res.status(200).json(allUsers);
+    }
+    catch (err) {
+        return res.status(500).json({ message: 500, error: err.message });
     }
 };

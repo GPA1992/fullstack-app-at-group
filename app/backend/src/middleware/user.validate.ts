@@ -4,7 +4,8 @@ import { NextFunction, Request, Response } from 'express';
 import { User } from '../services';
 /* import * as jwt from 'jsonwebtoken'; */
 import userSchema from './schema/schema';
-import error from '../utils/error';
+import https from '../utils/httpsStatus';
+import { UserType } from '../types/types';
 
 /* const jwtConfig: jwt.SignOptions = {
 	expiresIn: '7d',
@@ -19,24 +20,25 @@ class Validate {
 	public static createUserfieldValidate = async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			await userSchema.validateAsync(req.body);   
+			
 			return next();
 		} catch (err: any) {
-			return res.status(error.UNPROCESSABLE_ENTITY).json({ messageaaaa: err.message });
+			return res.status(https.UNPROCESSABLE_ENTITY).json({ message: err.message });
 		}
 	};
 
 	public static createUserValidate = async  (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const { nome } = req.body;
-			const checkIfUserAlreadyExists = await User.findByName(nome);
+			const checkIfUserAlreadyExists: UserType | object[] = await User.findByName(nome as string);
 			
-			if (checkIfUserAlreadyExists.length > 0) {
-				return res.status(error.CONFLICT).json({ messageaaaa: 'User already exists' });
+			
+			if (Array.isArray(checkIfUserAlreadyExists) && checkIfUserAlreadyExists.length > 0) {
+				return res.status(https.CONFLICT).json({ messageaaaa: 'User already exists' });
 			}
-			/* console.log('nao existe');	 */		
 			return next();
 		} catch (err: any) {
-			return res.status(error.UNPROCESSABLE_ENTITY).json({ messageaaaa: err.message });
+			return res.status(https.UNPROCESSABLE_ENTITY).json({ messageaaaa: err.message });
 		}
 	};
 	

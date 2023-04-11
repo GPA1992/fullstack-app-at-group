@@ -5,10 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const index_1 = __importDefault(require("./index"));
-async function selectOneUser(nome) {
-    const user = await index_1.default.query(`SELECT * FROM 'users' WHERE 'nome' = ${nome}`, {
-        type: sequelize_1.QueryTypes.SELECT
-    });
-    return user;
-}
-exports.default = selectOneUser;
+const selectByName = async (nome) => {
+    try {
+        const user = await index_1.default.query('SELECT * FROM Users WHERE nome = :nome', {
+            replacements: { nome },
+            type: sequelize_1.QueryTypes.SELECT
+        });
+        return user;
+    }
+    catch (err) {
+        return err;
+    }
+};
+exports.default = selectByName;
