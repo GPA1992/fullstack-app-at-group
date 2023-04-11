@@ -31,7 +31,7 @@ export const getUserByEmail = async (email: string) => {
 	}
 };
 
-export const createUser = async (user: UserType) => {
+export const createUser = async (user: UserType, token: string) => {
 	try {
 		const response = await api.post('user', { 
 			'nome': user.nome,
@@ -39,7 +39,11 @@ export const createUser = async (user: UserType) => {
 			'senha': user.senha,
 			'avatar': user.avatar,
 			'dataDeNascimento': user.dataDeNascimento,
-		} );
+		}, {
+			headers: {
+				'Authorization': `Bearer ${token}`
+			}
+		});
 		console.log(response.data);		
 		return response.data;
 	} catch (error) {

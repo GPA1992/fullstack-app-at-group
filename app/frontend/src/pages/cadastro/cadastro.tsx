@@ -23,8 +23,9 @@ export default function Cadastro(): JSX.Element {
 			dataDeNascimento,
 			ativo,
 		};
-		console.log(dataDeNascimento);		
-		await createUser(userData);
+		console.log(dataDeNascimento);
+		const token = localStorage.getItem('user-data');		
+		await createUser(userData, token as string);
 	};
 
 	return (
