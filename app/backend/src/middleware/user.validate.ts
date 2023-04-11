@@ -1,16 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from 'express';
-import * as bcrypt from 'bcryptjs';
+/* import * as bcrypt from 'bcryptjs'; */
 import { User } from '../services';
-import * as jwt from 'jsonwebtoken';
+/* import * as jwt from 'jsonwebtoken'; */
 import userSchema from './schema/schema';
 import error from '../utils/error';
 
-const jwtConfig: jwt.SignOptions = {
+/* const jwtConfig: jwt.SignOptions = {
 	expiresIn: '7d',
 	algorithm: 'HS256',
-};
+}; */
 
-const secret = process.env.JWT_SECRET || 'jwt_secret';
+/* const secret = process.env.JWT_SECRET || 'jwt_secret'; */
 
 const incorrectMsg = 'Incorrect email or password';
 
@@ -24,6 +25,21 @@ class Validate {
 		}
 	};
 
+	public static createUserValidate = async  (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const { nome } = req.body;
+			const checkIfUserAlreadyExists = await User.findByName(nome);
+			
+			if (checkIfUserAlreadyExists.length > 0) {
+				return res.status(error.CONFLICT).json({ messageaaaa: 'User already exists' });
+			}
+			/* console.log('nao existe');	 */		
+			return next();
+		} catch (err: any) {
+			return res.status(error.UNPROCESSABLE_ENTITY).json({ messageaaaa: err.message });
+		}
+	};
+	
 	public static loginFieldHandle = async (
 		req: Request,
 		res: Response,
@@ -44,7 +60,7 @@ class Validate {
 		}
 	};
 
-	public static fieldValidate = async (
+/* 	public static fieldValidate = async (
 		req: Request,
 		res: Response,
 		next: NextFunction
@@ -69,6 +85,6 @@ class Validate {
 		} catch (err: any) {
 			return res.status(400).json({ message: err.message });
 		}
-	};
+	}; */
 }
 export default Validate;
