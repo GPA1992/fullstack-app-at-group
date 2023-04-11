@@ -29,7 +29,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = __importStar(require("bcryptjs"));
 const services_1 = require("../services");
-const joi_1 = __importDefault(require("joi"));
+const schema_1 = __importDefault(require("./schema/schema"));
 const error_1 = __importDefault(require("../utils/error"));
 const jwtConfig = {
     expiresIn: '7d',
@@ -42,15 +42,7 @@ class Validate {
 _a = Validate;
 Validate.createUserfieldValidate = async (req, res, next) => {
     try {
-        console.log("FUI CHAMADO");
-        const schema = joi_1.default.object({
-            nome: joi_1.default.string().min(4).required(),
-            email: joi_1.default.string().email().required(),
-            senha: joi_1.default.string().min(5).required(),
-            avatar: joi_1.default.string().required(),
-            dataDeNascimento: joi_1.default.date().required(),
-        });
-        await schema.validateAsync(req.body);
+        await schema_1.default.validateAsync(req.body);
         return next();
     }
     catch (err) {
