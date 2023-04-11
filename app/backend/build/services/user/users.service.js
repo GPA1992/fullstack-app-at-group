@@ -32,7 +32,9 @@ User.findByName = async (nome) => {
 };
 User.findByEmail = async (email) => {
     try {
+        console.log(email);
         const user = await user_model_1.default.findOne({ where: { email } });
+        console.log(user);
         return user;
     }
     catch (err) {
